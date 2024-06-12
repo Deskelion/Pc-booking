@@ -9,7 +9,8 @@ const Booking = ({ exAtr, id, fill, onClose, changeColor }) => {
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [duration, setDuration] = useState(1);
-  const [place, setPlace] = useState([]);
+  const [place, setPlace] = useState({});
+  const [bookings, setBookings] = useState([]);
   const navigate = useNavigate()
 
   const { user, dispatch } = useContext(AuthContext);
@@ -76,20 +77,34 @@ const Booking = ({ exAtr, id, fill, onClose, changeColor }) => {
   useEffect(() => {
     const getPlace = async () => {
       try {
-        const response = await axios.get(`/places/name/${id}`); 
+        const response = await axios.get(`/places/name/${id}`);
         if (response.data) {
-          setPlace(response.data); 
+          setPlace(response.data);
         }
       } catch (error) {
         console.error("Ошибка при получении места:", error);
       }
     };
+
+    const getBookings = async () => {
+      try {
+        const response = await axios.get(`/bookings`);
+        if (response.data) {
+          setBookings(response.data);
+        }
+      } catch (error) {
+        console.error("Ошибка при получении бронирований:", error);
+      }
+    };
+
     getPlace();
-  }, []);
+    getBookings();
+  }, [id]);
 
+  console.log('ид компа',place._id)
 
-
-
+  const filteredBookings = bookings.filter(booking => booking.placename === place._id);
+;
   return (
     <div className='booking'>
       <div className='bContainer'>
@@ -106,7 +121,20 @@ const Booking = ({ exAtr, id, fill, onClose, changeColor }) => {
               {place.desc}
             </div>
           </div>
-        </div>          
+        </div> 
+        <div className='bookStatus'>
+          {filteredBookings.length > 0 ? (
+            filteredBookings.map((booking) => (
+              <div className='statusOccupied' key={booking._id}>
+                <p>{`Забронировано с ${booking.startTime} до ${booking.endTime}`}</p>
+              </div>
+            ))
+          ) : (
+            <div className='statusFree'>
+              <p>Свободно</p>
+            </div>
+          )}
+        </div>        
         <div className='bFooterContainer'>
           <div className='inputContainer'>            
             <div>

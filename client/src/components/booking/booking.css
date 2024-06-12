@@ -49,6 +49,26 @@
     text-overflow: ellipsis; /* Добавляет многоточие в конце обрезанного текста */
 }
 
+.bookStatus{
+    
+}
+
+.statusOccupied{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #F6768E;
+}
+
+.statusFree{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #82ffc5;
+}
+
 .bFooterContainer{
     padding: 20px;
     display: flex;
